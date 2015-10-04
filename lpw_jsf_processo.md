@@ -4,9 +4,21 @@
 
 * Fazer o diagrama de classes (UML)
 * Criar o projeto no NetBeans:
-*   Escolha Projeto 
-
-## Fazer classes do domínio
+  * Escolha Java Web Application
+  * Dê um nome ao projeto
+  * Selecione a versão do Java e o servidor HTTP (usamos Tomcat)
+  * Selecione o JavaServer Pages
+    * Em Components selecione PrimeFaces 
+  * Selecione Hiberntate
+    * Escolha a opção para criar uma nova conexão
+    * Escolha o driver do seu DBMS
+    * host=localhost
+    * A porta depende do DBMS. No postgresql é 5432
+    * Entre no seu DBMS e crie uma base de dados
+    * Coloque o nome da base no campo database
+  * Finalize a contrução do projeto
+* Crie um pacote negocio
+* Programe as classes de acordo com seu diagrama
 
 ## Colocar anotações de JSF
 
