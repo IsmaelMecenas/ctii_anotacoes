@@ -1,4 +1,4 @@
-# Processo para construir sistemas com JavaServerFaces, Primefaces e Hibernate
+# Processo para construir sistemas com JavaServer Faces, Primefaces e Hibernate
 
 ## Camada de negócio
 
