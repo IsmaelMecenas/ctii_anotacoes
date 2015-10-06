@@ -20,7 +20,33 @@
 * Crie um pacote negocio
 * Programe as classes de acordo com seu diagrama
 
+## Fazer os contrutores (builders)
+
+* Crie um pacote para contrutores/builders
+* Coloque todos os atributos da classe a ser contruída no builder
+* Crie métodos get/set para cada atributo no builder
+* Crie um construtor vazio
+* Crie um método build() que contrói (new) e retorna o novo objeto
+* A anotação @ManagedBean permite que você acesse uma instância da classe pelas páginas JSF.
+  * Use o atributo name para dar um nome
+* A anotação @RequestScoped faz com o que um objeto novo seja criaddo a cada requisição
+
 ## Fazer um repositório genérico
+
+* Crie uma interface repositório genérica (com <>)
+* Chame de Repositorio<T> ou RepositorioGenerico<T>. Vou usar o primeiro.
+* Coloque os métodos do CRUD básico:
+  * void/boolean adicionar ( Classe c ); 
+  * void/boolean/Classe remover (Classe c);
+  * void/boolean/Classe alterar (Classe c);
+  * Clase recuperar (int id);
+  * Collection<Classe> recuperar/recuperarTodos ();
+* (Opcional) Crie um novo pacote para as implementações
+* (Opcional) Crie uma interface para cada Classe que vai ter um repositório
+  * extends Repositorio<T>
+  * Pode adicionar outros métodos mais específicos
+  * Quando for fazer implementações, use essas interfaces ao invés da genérica
+
 
 ## Implementar o repositório memória
 
@@ -32,7 +58,7 @@
 
 ## Fazer o DaoManager do Hibernate
 
-## Fazer os contrutores (builders)
+
 
 ## Implementar o repositório para Banco de Dados
 
