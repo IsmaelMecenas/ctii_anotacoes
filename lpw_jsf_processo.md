@@ -20,6 +20,12 @@
 * Crie um pacote negocio
 * Programe as classes de acordo com seu diagrama
 
+## Fazer um repositório genérico
+
+## Implementar o repositório memória
+
+## Criar os controladores
+
 ## Colocar anotações de JSF
 
 ## Fazer a interface de repositório genérico
@@ -51,6 +57,8 @@
 * A anotação @ManagedBean permite que você acesse uma instância da classe pelas páginas JSF. Coloca-se o atributo name com o nome.
 * A anotaçõa @RequestScoped faz com o que um objeto novo seja criaddo a cada requisição
 * 
+
+## Ciar builders
 
 ## Criar controladores
 
