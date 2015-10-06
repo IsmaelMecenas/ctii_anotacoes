@@ -1,5 +1,9 @@
 # Processo para construir sistemas com JavaServer Faces, Primefaces e Hibernate
 
+Notas iniciais:
+(Opcional) -> Nem todos os sistemas precisam, mas você precisa saber
+[xxx] -> é opcional e não faz qualquer diferença
+
 ## Camada de negócio
 
 * Fazer o diagrama de classes (UML)
@@ -37,8 +41,13 @@
 * Chame de Repositorio<T> ou RepositorioGenerico<T>. Vou usar o primeiro.
 * Coloque os métodos do CRUD básico:
   * void/boolean adicionar ( Classe c ); 
+   * boolean -> operação bem ou mal sucesidada
   * void/boolean/Classe remover (Classe c);
+   * boolean -> operação bem ou mal sucesidada (mais usado ainda)
+   * Classe -> retorna o objeto removido (muito usado)
   * void/boolean/Classe alterar (Classe c);
+   * boolean -> operação bem ou mal sucesidada
+   * Classe -> retorna o objeto alterado (pouco usado)
   * Clase recuperar (int id);
   * Collection<Classe> recuperar/recuperarTodos ();
 * (Opcional) Crie um novo pacote para as implementações
@@ -49,6 +58,18 @@
 
 
 ## Implementar o repositório memória
+
+* Crie uma classe Repositorio[Classe][Impl]Memoria
+  * implements Repositorio<Classe>
+* Adicione a implementação de todos os métodos
+* Crie uma Collection (List, Set, Map etc) e coloque como atributo
+* O método recuperar()/recuperarTodos() crie uma cópia da collection (normalmente lista)
+  * Crie a nova collection
+  * Adicione todos os elementos da original
+  * retorne-a
+* O método recuperar(int id) pode ser feito de duas formas
+  * Percorra a collection elemento a elemento buscando pelo elemento com esse id 
+  * Use um Map que mapeie os ids e os objetos. Assim basta dar get e retornar
 
 ## Criar os controladores
 
