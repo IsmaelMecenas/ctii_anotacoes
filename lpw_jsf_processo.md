@@ -6,7 +6,9 @@ Notas iniciais:
 (??) -> Tenho dúvida! Ajudem-me
 Podem fazer uma conta no GitHub e editar. As mudanças tem que ser confirmadas pro mim (lucasgueiros)
 
-## Camada de negócio
+## Camada de negócio e construtores (builders)
+
+### Camada de negócio
 
 * Fazer o diagrama de classes (UML)
 * Criar o projeto no NetBeans:
@@ -26,7 +28,7 @@ Podem fazer uma conta no GitHub e editar. As mudanças tem que ser confirmadas p
 * Crie um pacote negocio
 * Programe as classes de acordo com seu diagrama
 
-## Fazer os contrutores (builders)
+### Fazer os contrutores (builders)
 
 * Crie um pacote para contrutores/builders
 * Coloque todos os atributos da classe a ser contruída no builder
@@ -37,7 +39,9 @@ Podem fazer uma conta no GitHub e editar. As mudanças tem que ser confirmadas p
   * Use o atributo name para dar um nome
 * A anotação @RequestScoped faz com o que um objeto novo seja criaddo a cada requisição
 
-## Fazer um repositório genérico
+## Camda de Persistência (Parte I)
+
+### Fazer um repositório genérico
 
 * Crie uma interface repositório genérica (com <>)
 * Chame de Repositorio<T> ou RepositorioGenerico<T>. Vou usar o primeiro.
@@ -72,7 +76,9 @@ Podem fazer uma conta no GitHub e editar. As mudanças tem que ser confirmadas p
   * Percorra a collection elemento a elemento buscando pelo elemento com esse id 
   * Use um Map que mapeie os ids e os objetos. Assim basta dar get e retornar
 
-## Criar os controladores
+## Criando a camada de aplicação
+
+### Criar os controladores
 
 * Controladores servem para relacionar o domínio, a persistência e a apresentação
 * Crie a classe ControladorClasse
@@ -85,23 +91,61 @@ Podem fazer uma conta no GitHub e editar. As mudanças tem que ser confirmadas p
 * Coloque a anotação @ManagedBean com o nome e @SessionScoped
   * @SessionScoped faz com que um objeto desse seja criado para cada sessão
 ```java
-@ManagedBean( name = "ctrl_curso" )
+/**
+ * @author Ismael
+ */
+
+@ManagedBean ( name = "controlador_classe" )
 @SessionScoped
+public class ControladorClasse {
+
+  private RepositorioGenerico<Classe> repositorioClasse = null;
+
+  public ControladorClasse(){
+    this.repositorioClasse = new RepositorioClasseImplDB();
+  }
+
+  public void inserir(Classe classe){
+    this.repositorioClasse.inserir(classe);
+  }
+
+  public void alterar(Classe classe){
+    this.repositorioConsole.alterar(console);
+  }
+
+  public Classe recuperar(int codigo){
+    return this.repositorioClasse.recuperar(codigo);
+  }
+
+  public List<Classe> recuperarTodos(){
+    return this.repositorioClasse.recuperarTodos();
+  }
+
+  public void excluir(Classe classe){
+    this.repositorioConsole.excluir(console);
+  }
+}
 ```
 
-## Criar as páginas de JSF
+### Criar as páginas de JSF
 
-### Criando páginas de cadastro.
+#### Criando páginas de cadastro.
 
-### Criando página de consulta
+#### Criando página de consulta
 
-### Adicionando função remover
+#### Adicionando função remover
 
-### Adicionando função alterar
+#### Adicionando função alterar
 
-### Adicionando consultar personalizadas
+#### Adicionando consultar personalizadas
 
-## Fazer o DaoManager do Hibernate
+#### Criando menus de confirmação
+
+#### Verificando campos obrigatórios
+
+## Camda de persistência (Parte II - Banco de Dados)
+
+### Fazer o DaoManager do Hibernate
 
 * Crie um pacote para ele
 * Copie esse código aqui (ou decore para a prova hehehe):
@@ -275,8 +319,9 @@ public class DaoManagerHiber {
 }
 ```
 
+### Colocar anotações nas classes do domínio
 
-## Implementar o repositório para Banco de Dados
+### Implementar o repositório para Banco de Dados
 
 * Crie um pacote para colocarar as implementações
 * Crie uma classe 
@@ -292,6 +337,34 @@ public class DaoManagerHiber {
   * recuperar: "from <Classe> where codigo=" + codigo
   * recuperarTodos: "from <Classe>"
 * O método recuperar recebe o codigo/id do objeto. Depois de chamar do Dao para pegar o HQL ele recebe uma lista e deve pegar o primeiro elemento
+
+```java
+/**
+ * @author Ismael
+**/
+@Override
+public void inserir(Classe o) {
+  DaoManagerHiber.getInstance().persist(o);
+}
+@Override
+public void alterar(Classe o) {
+  DaoManagerHiber.getInstance().update(o);
+}
+@Override
+public Classe recuperar(int codigo) {
+  return (Classe) DaoManagerHiber.getInstance().recover("from NomeDaClasse where codigo="+codigo).get(0);
+}
+@Override
+public void excluir(Classe o) {
+  DaoManagerHiber.getInstance().delete(o);
+}
+@Override
+public List<Classe> recuperarTodos() {
+  return DaoManagerHiber.getInstance().recover("from NomeDaClasse");
+}
+```
+
+### Subsituir implementação memória pela de banco de dados
 
 # Parte de Ismael
 
@@ -339,27 +412,7 @@ Procedimentos para a criação de um projeto em LPW
 * Essas novas classes implementarão o repositório genérico.
 * dentro delas faz o CRUD, segue o passo a passo:
 * ->
-```java
-@Override
-public void inserir(Classe o) {
-DaoManagerHiber.getInstance().persist(o);
-}
-@Override
-public void alterar(Classe o) {
-DaoManagerHiber.getInstance().update(o);
-}
-@Override
-public Classe recuperar(int codigo) {
-return (Classe) DaoManagerHiber.getInstance().recover("from NomeDaClasse where codigo="+codigo).get(0);
-}
-@Override
-public void excluir(Classe o) {
-DaoManagerHiber.getInstance().delete(o);
-}
-@Override
-public List<Classe> recuperarTodos() {
-return DaoManagerHiber.getInstance().recover("from NomeDaClasse");
-```
+
 
 11) Inserir o JSF
 
@@ -378,59 +431,7 @@ return DaoManagerHiber.getInstance().recover("from NomeDaClasse");
 * exemplo de um controlador:
 
 
-```java
-@ManagedBean
 
-@SessionScoped
-
-public class ControladorClasse {
-
-
-
- private RepositorioGenerico<Classe> repositorioClasse = null;
-
-
-
- public ControladorClasse(){
-
- this.repositorioClasse = new RepositorioClasseImplDB();
-
- }
-
- public void inserir(Classe classe){
-
- this.repositorioClasse.inserir(classe);
-
- }
-
-
-
- public void alterar(Classe classe){
-
- this.repositorioConsole.alterar(console);
-
- }
-
- public Classe recuperar(int codigo){
-
- return this.repositorioClasse.recuperar(codigo);
-
- }
-
- public List<Classe> recuperarTodos(){
-
- return this.repositorioClasse.recuperarTodos();
-
- }
-
- public void excluir(Classe classe){
-
- this.repositorioConsole.excluir(console);
-
- }
-
-}
-```
 
 13) Criar página cadastro, mas como?
 
