@@ -3,6 +3,8 @@
 Notas iniciais:
 (Opcional) -> Nem todos os sistemas precisam, mas você precisa saber
 [xxx] -> é opcional e não faz qualquer diferença
+(??) -> Tenho dúvida! Ajudem-me
+Podem fazer uma conta no GitHub e editar. As mudanças tem que ser confirmadas pro mim (lucasgueiros)
 
 ## Camada de negócio
 
@@ -56,7 +58,6 @@ Notas iniciais:
   * Pode adicionar outros métodos mais específicos
   * Quando for fazer implementações, use essas interfaces ao invés da genérica
 
-
 ## Implementar o repositório memória
 
 * Crie uma classe Repositorio[Classe][Impl]Memoria
@@ -73,12 +74,206 @@ Notas iniciais:
 
 ## Criar os controladores
 
-## Colocar anotações de JSF
+* Controladores servem para relacionar o domínio, a persistência e a apresentação
+* Crie a classe ControladorClasse
+* Coloque um contrutor vazio
+  * (??) Coloque a anotação @Deprecated
+* Coloque um atributo RepositorioClasse (se tiver usando interfaces específicas, coloque-a aqui)
+  * Inicialize-o no construtor com a implementação memória
+* Coloque os método adicionar, remover, alterar, recuperar(int id), recuperar()
+  * (Dica) No NetBeans, coloque em inserir código -> métodos delegados. Selecione o repositório e pronto
+* Coloque a anotação @ManagedBean com o nome e @SessionScoped
+  * @SessionScoped faz com que um objeto desse seja criado para cada sessão
+```java
+@ManagedBean( name = "ctrl_curso" )
+@SessionScoped
+```
 
-## Fazer a interface de repositório genérico
+## Criar as páginas de JSF
+
+### Criando páginas de cadastro.
+
+### Criando página de consulta
+
+### Adicionando função remover
+
+### Adicionando função alterar
+
+### Adicionando consultar personalizadas
 
 ## Fazer o DaoManager do Hibernate
 
+* Crie um pacote para ele
+* Copie esse código aqui (ou decore para a prova hehehe):
+
+```java
+import java.util.List;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.criterion.Example;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
+
+/**
+ *
+ * @author Eduardo
+ */
+public class DaoManagerHiber {
+    private static DaoManagerHiber myself = null;
+    
+    private SessionFactory sessionFactory;
+    private Session s;
+
+    private DaoManagerHiber(){
+
+    try{
+
+        sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
+        s = sessionFactory.openSession();
+        
+
+    }catch(Throwable th){
+
+        System.err.println("Enitial SessionFactory creation failed"+th);
+
+        throw new ExceptionInInitializerError(th);
+
+    }
+
+  }
+    
+    public static DaoManagerHiber getInstance(){
+        if(myself==null)
+            myself = new DaoManagerHiber();
+        
+        return myself;
+    }
+  
+    public void persist(Object o){
+        
+        Transaction tr = null;
+        try{
+           
+            s = sessionFactory.openSession();
+            tr = s.beginTransaction();  
+        }catch(org.hibernate.exception.JDBCConnectionException ex){
+            s.close();
+            s=sessionFactory.openSession();
+            tr = s.beginTransaction();  
+        }
+        
+        s.save(o);
+        
+        tr.commit();
+        
+        s.flush();
+    }
+    
+    public List recover(String hql){
+        Transaction tr = null;
+        try{
+           
+            s = sessionFactory.openSession();
+            tr = s.beginTransaction();  
+        }catch(org.hibernate.exception.JDBCConnectionException ex){
+            s.close();
+            s=sessionFactory.openSession();
+            tr = s.beginTransaction();  
+        }
+         
+        
+        Query query = s.createQuery(hql);
+        
+        s.flush();
+        
+        return query.list();
+    }
+    
+    public List recoverSQL(String sql){
+        Transaction tr = null;
+        try{
+           
+            s = sessionFactory.openSession();
+            tr = s.beginTransaction();  
+        }catch(org.hibernate.exception.JDBCConnectionException ex){
+            s.close();
+            s=sessionFactory.openSession();
+            tr = s.beginTransaction();  
+        }
+         
+        
+        Query query = s.createSQLQuery(sql);
+        
+        s.flush();
+        
+        return query.list();
+    }
+    
+    public List recover(Object o){
+        
+        Criteria c = s.createCriteria(o.getClass());
+        
+        c.add(Example.create(o).enableLike(MatchMode.ANYWHERE).ignoreCase().excludeProperty("codigo"));
+        
+        List l = c.list();
+        s.flush();
+        
+        return l;
+    }
+    
+    public void update(Object o){
+        Transaction tr = null;
+        try{
+           
+            s = sessionFactory.openSession();
+            tr = s.beginTransaction();  
+        }catch(org.hibernate.exception.JDBCConnectionException ex){
+            s.close();
+            s=sessionFactory.openSession();
+            tr = s.beginTransaction();  
+        }
+         
+        
+        s.update(o);
+        
+        tr.commit();
+        
+        s.flush();
+    }
+    
+    public void delete(Object o){
+        Transaction tr = null;
+        try{
+            s.clear();
+            s = sessionFactory.openSession();
+            tr = s.beginTransaction();
+        }catch(Exception ex){
+            s.close();
+            s=sessionFactory.openSession();
+            tr = s.beginTransaction();
+        }
+        
+        
+        s.delete(o);
+        
+        tr.commit();
+        
+        s.flush();
+    }
+    
+    public static void main(String args[]){
+        SchemaExport se = new SchemaExport(new AnnotationConfiguration().configure());
+		se.create(true, true);
+                
+       
+    }
+    
+}
+```
 
 
 ## Implementar o repositório para Banco de Dados
@@ -97,25 +292,8 @@ Notas iniciais:
   * recuperar: "from <Classe> where codigo=" + codigo
   * recuperarTodos: "from <Classe>"
 * O método recuperar recebe o codigo/id do objeto. Depois de chamar do Dao para pegar o HQL ele recebe uma lista e deve pegar o primeiro elemento
-* 
-
-## Colocar anotações de JSF nos builders
-
-* A anotação @ManagedBean permite que você acesse uma instância da classe pelas páginas JSF. Coloca-se o atributo name com o nome.
-* A anotaçõa @RequestScoped faz com o que um objeto novo seja criaddo a cada requisição
-* 
-
-## Ciar builders
-
-## Criar controladores
-
-## Criar as páginas de JSF
-
-### Criando páginas de cadastro.
 
 # Parte de Ismael
-
-# Untitled
 
 Procedimentos para a criação de um projeto em LPW
 1° Declara o Entity e o Table
@@ -161,25 +339,27 @@ Procedimentos para a criação de um projeto em LPW
 * Essas novas classes implementarão o repositório genérico.
 * dentro delas faz o CRUD, segue o passo a passo:
 * ->
-* @Override
-* public void inserir(Classe o) {
-*  DaoManagerHiber.getInstance().persist(o);
-*  }
-*  @Override
-*  public void alterar(Classe o) {
-*  DaoManagerHiber.getInstance().update(o);
-*  }
-*  @Override
-*  public Classe recuperar(int codigo) {
-*  return (Classe) DaoManagerHiber.getInstance().recover("from NomeDaClasse where codigo="+codigo).get(0);
-*  }
-*  @Override
-*  public void excluir(Classe o) {
-*  DaoManagerHiber.getInstance().delete(o);
-*  }
-*  @Override
-*  public List<Classe> recuperarTodos() {
-*  return DaoManagerHiber.getInstance().recover("from NomeDaClasse");
+```java
+@Override
+public void inserir(Classe o) {
+DaoManagerHiber.getInstance().persist(o);
+}
+@Override
+public void alterar(Classe o) {
+DaoManagerHiber.getInstance().update(o);
+}
+@Override
+public Classe recuperar(int codigo) {
+return (Classe) DaoManagerHiber.getInstance().recover("from NomeDaClasse where codigo="+codigo).get(0);
+}
+@Override
+public void excluir(Classe o) {
+DaoManagerHiber.getInstance().delete(o);
+}
+@Override
+public List<Classe> recuperarTodos() {
+return DaoManagerHiber.getInstance().recover("from NomeDaClasse");
+```
 
 11) Inserir o JSF
 
@@ -198,6 +378,7 @@ Procedimentos para a criação de um projeto em LPW
 * exemplo de um controlador:
 
 
+```java
 @ManagedBean
 
 @SessionScoped
@@ -249,7 +430,7 @@ public class ControladorClasse {
  }
 
 }
-
+```
 
 13) Criar página cadastro, mas como?
 
@@ -261,9 +442,8 @@ public class ControladorClasse {
 * exemplo:
 
 
-
+```xhtml
 <h:body>
-
  <h:form id="formulario">
 
  <p:fieldset legend="Cadastro de Console">
@@ -281,3 +461,4 @@ public class ControladorClasse {
  </h:form>
 
 </h:body>
+```
