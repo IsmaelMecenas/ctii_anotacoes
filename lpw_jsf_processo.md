@@ -39,7 +39,7 @@ Podem fazer uma conta no GitHub e editar. As mudanças tem que ser confirmadas p
   * Use o atributo name para dar um nome
 * A anotação @RequestScoped faz com o que um objeto novo seja criaddo a cada requisição
 
-## Camda de Persistência (Parte I)
+## Camada de Persistência (Parte I)
 
 ### Fazer um repositório genérico
 
@@ -129,9 +129,49 @@ public class ControladorClasse {
 
 ### Criar as páginas de JSF
 
-#### Criando páginas de cadastro.
+#### Criando páginas de cadastro
 
 #### Criando página de consulta
+
+* Crie uma nova página JSF
+* Coloque o h:form de sempre com id
+* Abra um p:dataTable com dois atributos (imagine como o for(Classe var : lista)
+  * var: é o objeto que está naquela linha
+  * value: é a lista de objetas (recupere do controlador)
+  * emptyMessage: é uma mensagem a ser exibida quando não tiver nada a tabela
+* Para cada coluna, abra um p:column
+  * headerText: é o nome da coluna
+* Dentro do p:column coloque um h:outputText
+  * No value coloque o valor do atributo, recuperando de var
+  
+Exemplo:
+
+```xhtml
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form id="formulario">
+            <p:dataTable var="curso" value="#{ctrl_curso.recuperar()}" emptyMessage="Nenhum curso cadastrado" >
+
+                <p:column headerText="Id">
+                    <h:outputText value="#{curso.id}" />
+                </p:column>
+
+                <p:column headerText="Nome">
+                    <h:outputText value="#{curso.nome}"/>
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>
+```
 
 #### Adicionando função remover
 
