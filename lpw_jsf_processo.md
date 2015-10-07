@@ -452,6 +452,11 @@ public List<Classe> recuperarTodos() {
 
 ### Subsituir implementação memória pela de banco de dados
 
+* Basta alterar os controladores.
+* Nos seus contrutores, deve ter a inicialização do RepositorioClasse[Impl]Memoria
+* Subistitua por RepositorioClasse[Impl]DB
+* Prontinho!
+
 # Parte de Ismael
 
 Procedimentos para a criação de um projeto em LPW
