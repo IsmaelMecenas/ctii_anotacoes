@@ -129,7 +129,54 @@ public class ControladorClasse {
 
 ### Criar as páginas de JSF
 
+* Para links diretos para páginas JSF, use faces/nome_da_pagina.xhtml.
+
 #### Criando páginas de cadastro
+
+* Crie uma página JSF com o h:form com id
+* Crie uma "caixa" com p:fieldset
+  * legend: é tipo um título da página
+* Crie uma tabela com p:panelGrid
+  * columns: diz quantas colunas a tabela vai ter. Por enquanto duas
+* Coloque pares desses dois elementos para cada campo do formulário:
+  * h:outputText para colocar uma label em cada campo (atributo value)
+  * p:inputText para a "caixa de texto" onde o usuário vai digitar
+    * O atributo value vai receber o nome do campo correspondente "#{builder.campo}"
+* No final, dentro do fieldset e fora do panelGrid, coloque o button:
+  * use a tag p:commandButton com os atributos:
+    * value: o texto que vai aparecer no botão
+    * action: mande-o cadastrar o objeto gerado pelo builder:
+      * "#{controlador.adicionar( builder.build() ) }"
+
+Exemplo: 
+```xhtml
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form id="formulario">
+            <p:fieldset legend="Cadastrar cursos">
+                <p:panelGrid columns="2">
+                    <h:outputText value="Id*:"/>
+                    <p:inputText value="#{builder_curso.id}"/>
+                    
+                    <h:outputText value="Nome*:"/>
+                    <p:inputText value="#{builder_curso.nome}"/>
+                    
+                </p:panelGrid>
+                
+                <p:commandButton value="Cadastar" action="#{ctrl_curso.adicionar(builder_curso.build())}"/>
+                
+            </p:fieldset>
+        </h:form>
+    </h:body>
+</html>
+```
 
 #### Criando página de consulta
 
@@ -145,7 +192,6 @@ public class ControladorClasse {
   * No value coloque o valor do atributo, recuperando de var
   
 Exemplo:
-
 ```xhtml
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
