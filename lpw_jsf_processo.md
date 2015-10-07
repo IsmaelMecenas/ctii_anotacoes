@@ -15,7 +15,7 @@ Podem fazer uma conta no GitHub e editar. As mudanças tem que ser confirmadas p
   * Escolha Java Web Application
   * Dê um nome ao projeto
   * Selecione a versão do Java e o servidor HTTP (usamos Tomcat)
-  * Selecione o JavaServer Pages
+  * Selecione o JavaServer Faces --> JSF
     * Em Components selecione PrimeFaces 
   * Selecione Hiberntate
     * Escolha a opção para criar uma nova conexão
